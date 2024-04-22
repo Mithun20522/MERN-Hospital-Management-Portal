@@ -2,7 +2,7 @@ import { Accordion } from "flowbite-react";
 
 const About = () => {
   return (
-    <Accordion className="sm:max-w-5xl sm:mx-auto mt-12 shadow-md mx-2">
+    <Accordion className="sm:max-w-5xl sm:mx-auto mt-12 shadow-md mx-2 bg-white">
       <h1 className="text-4xl font-bold tex-gray-800 text-center p-3">About the portal</h1>
       <Accordion.Panel>
         <Accordion.Title className="font-bold">Mission and Vision</Accordion.Title>
