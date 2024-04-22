@@ -5,6 +5,7 @@ import dotenv from 'dotenv';
 import { connectMongoDB } from './db/connectMongoDB.js';
 import authRouter from './routes/auth.route.js';
 import userRouter from './routes/user.route.js';
+import hospitalRouter from './routes/hospital.route.js';
 
 dotenv.config();
 
@@ -23,5 +24,6 @@ connectMongoDB(MONGO_DB_URL)
 
 app.use('/api/auth',authRouter);
 app.use('/api/user',userRouter);
+app.use('/api/hospital', hospitalRouter);
 
 app.listen(PORT, () => console.log(`server running on port: ${PORT}`));
