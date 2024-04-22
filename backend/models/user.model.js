@@ -1,13 +1,16 @@
 import mongoose from "mongoose";
 
 const userSchema = new mongoose.Schema({
-    fullName: {
+    firstName: {
+        type:String,
+        required:true
+    },
+    lastName: {
         type:String,
         required:true
     },
     avatar:{
-        type:String,
-        default:"https://avatar.iran.liara.run/public/boy?username=john"
+        type:String
     },
     age:{
         type:Number,
