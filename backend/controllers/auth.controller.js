@@ -1,7 +1,7 @@
 import User from '../models/user.model.js';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-export const register = async(req, res, next) => {
+export const register = async(req, res) => {
     try {
         const {firstName, lastName, age, gender, email, password, state} = req.body;
         if(!firstName || !lastName || !age || !gender || !email || !password || !state){
@@ -33,7 +33,7 @@ export const register = async(req, res, next) => {
     }
 }
 
-export const login = async(req, res, next) => {
+export const login = async(req, res) => {
     try {
         const {email, password} = req.body;
 
@@ -48,7 +48,7 @@ export const login = async(req, res, next) => {
         if(!validUser){
             return res.status(400).json({message:'wrong credentials'});
         }
-        const token = jwt.sign({_id:user._id, isAdmin:user._isAdmin}, process.env.JWT_SECRET_KEY, {expiresIn:'1d'});
+        const token = jwt.sign({_id:user._id, isAdmin:user.isAdmin}, process.env.JWT_SECRET_KEY, {expiresIn:'1d'});
         res.cookie('access_token', token, {httpOnly:true});
 
         const {password: pass, ...rest} = user._doc;
@@ -59,7 +59,7 @@ export const login = async(req, res, next) => {
     }
 }
 
-export const logout = async(req, res, next) => {
+export const logout = async(req, res) => {
     try {
 
         res.clearCookie('access_token');
