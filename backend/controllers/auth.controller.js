@@ -1,17 +1,16 @@
 import User from '../models/user.model.js';
-import { errorHandler } from '../utils/error.js';
 import bcrypt from 'bcryptjs';
-
+import jwt from 'jsonwebtoken';
 export const register = async(req, res, next) => {
     try {
         const {firstName, lastName, age, gender, email, password, state} = req.body;
         if(!firstName || !lastName || !age || !gender || !email || !password || !state){
-            return next(errorHandler(400, 'all field are mandatory'));
+            return res.status(400).json({message:'all fields are mandatory'});
         }
 
         const user = await User.findOne({email});
         if(user){
-            return next(errorHandler(409,'Email already registered'));
+            return res.status(409).json({message:'Email already registered'});
         }
         const hashedPassword = bcrypt.hashSync(password, 10);
         const username = `${firstName.trim()}${lastName.trim()}`
@@ -30,7 +29,7 @@ export const register = async(req, res, next) => {
         return res.status(201).json(newUser);
 
     } catch (error) {
-        return next(errorHandler(500,error.message));
+        return res.status(500).json({message:error.message})
     }
 }
 
@@ -39,20 +38,33 @@ export const login = async(req, res, next) => {
         const {email, password} = req.body;
 
         if(!email || !password){
-            return next(errorHandler(400, 'all fields are mandatory'));
+            return res.status(400).json({message:'all fields are mandatory'});
         }
         const user = await User.findOne({email});
         if(!user){
-            return next(errorHandler(404, 'user not found'));
+            return res.status(404).json({message:'No user found'});
         }
         const validUser = bcrypt.compareSync(password, user.password);
         if(!validUser){
-            return next(errorHandler(400, 'wrong credentials'));
+            return res.status(400).json({message:'wrong credentials'});
         }
+        const token = jwt.sign({_id:user._id, isAdmin:user._isAdmin}, process.env.JWT_SECRET_KEY, {expiresIn:'1d'});
+        res.cookie('access_token', token, {httpOnly:true});
+
         const {password: pass, ...rest} = user._doc;
         return res.status(200).json(rest);
 
     } catch (error) {
-        return next(errorHandler(500,error.message));
+        return res.status(500).json({message:error.message})
+    }
+}
+
+export const logout = async(req, res, next) => {
+    try {
+
+        res.clearCookie('access_token');
+        return res.status(200).json({message:'logout successfully'});
+    } catch (error) {
+        return res.status(500).json({message:error.message}) 
     }
 }
