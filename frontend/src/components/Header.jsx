@@ -3,7 +3,6 @@ import {Link} from 'react-router-dom';
 const Header = () => {
   return (
     <Navbar fluid rounded>
-        <Link to={'/'}>
         <Navbar.Brand className='flex items-center'>
             <img className='w-16 h-16 rounded-full' src="https://img.freepik.com/premium-vector/picture-doctor-with-glasses-lab-coat_410516-87465.jpg" alt="logo" />
             <div className='flex flex-col justify-center items-center'>
@@ -11,7 +10,7 @@ const Header = () => {
             <span className='text-lg italic font-medium'>Connect</span>
             </div>
         </Navbar.Brand>
-        </Link>
+        
         <div className='flex md:order-2'>
             <Dropdown
             arrowIcon={false}
